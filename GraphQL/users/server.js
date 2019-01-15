@@ -1,10 +1,11 @@
 const express = require('express');
 const expressGraphQL = require('express-graphql'); //compatibility layer between Express and GraphQL
-
+const schema = require('./schema/schema')
 
 const app = express();
 
 app.use('/graphql', expressGraphQL({
+  schema,
   graphiql: true
 }));
 
