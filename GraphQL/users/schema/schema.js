@@ -1,14 +1,16 @@
 const graphql = require('graphql');
 const { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLSchema} = graphql;
-const _ = require('lodash');
+const axios = require('axios');
+// const _ = require('lodash');
+
 
 
 //dummy data
-const users=[
-  {id : '10', firstName: 'Ali',  age: 20},
-  {id : '19', firstName: 'Sajid',  age: 25},
-  {id : '29', firstName: 'usama',  age: 19}
-];
+// const users=[
+//   {id : '10', firstName: 'Ali',  age: 20},
+//   {id : '19', firstName: 'Sajid',  age: 25},
+//   {id : '29', firstName: 'usama',  age: 19}
+// ];
 
 //Creating Schema
 const UserType = new GraphQLObjectType ({
@@ -27,7 +29,11 @@ const RootQuery = new GraphQLObjectType({
       type: UserType,
       args:{id: {type: GraphQLString } },
       resolve(parentValue, args){
-        return _.find(users, {id: args.id});
+        return axios.get(`http://localhost:3000/users/${args.id}`)
+        .then(resp => resp.data)
+        // return _.find(users, {id: args.id});
+        //Now get data from over db.json file which is our local sb server running on localhost:3000
+        // .then(response =>console.log(response)) {data:{firstname: 'name}} bad news graphql not know nested property data 
       }
     }
   }
