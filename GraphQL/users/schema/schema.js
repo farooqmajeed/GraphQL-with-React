@@ -13,14 +13,30 @@ const axios = require('axios');
 // ];
 
 //Creating Schema
+const CompanyType = new GraphQLObjectType({
+  name: 'Company',
+  fields:{
+    id:{ type: GraphQLString },
+    name:{ type: GraphQLString },
+    description:{ type: GraphQLString }
+  }
+})
 const UserType = new GraphQLObjectType ({
   name : 'User',
   fields:{
     id: { type: GraphQLString },
     firstName: { type: GraphQLString },
-    age: { type: GraphQLInt }
+    age: { type: GraphQLInt },
+    company:{
+      type:CompanyType,
+      resolve( parentValue,args){
+        return axios.get(`http://localhost:3000/companies/${parentValue.companyId}`)
+          .then(resp => resp.data)
+      }
+    }
   }
 });
+
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -35,7 +51,11 @@ const RootQuery = new GraphQLObjectType({
         //Now get data from over db.json file which is our local sb server running on localhost:3000
         // .then(response =>console.log(response)) {data:{firstname: 'name}} bad news graphql not know nested property data 
       }
-    }
+    },
+    // company:{
+    //   type:CompanyType,
+
+    // }
   }
 })
 
