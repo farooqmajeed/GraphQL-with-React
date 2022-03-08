@@ -8,20 +8,35 @@ const { mongoURL } = require("./keys");
 const app = express();
 
 // Replace with your mongoLab URI
-const MONGO_URI = "mongodb+srv://farooq:farooq123@cluster0.qcd52.mongodb.net/test?retryWrites=true&w=majority";
+// const MONGO_URI = "mongodb+srv://farooq:farooq123@cluster0.qcd52.mongodb.net/test?retryWrites=true&w=majority";
 if (!mongoURL) {
   throw new Error('You must provide a MongoLab URI');
 }
 
 
 mongoose.Promise = global.Promise;
-mongoose.createConnection(mongoURL, {
+mongoose.connect(mongoURL, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
-  useCreateIndex: true,
+  useFindAndModify: false
 });
+const db= mongoose.connection;
+db.on("error", console.error.bind(console, "connection error"));
+db.once("open", function(){
+  console.log(" connection sucess ------------->")
+})
+
+
 
 mongoose.connection.on("connected", () => {
+  console.log("Connected to mongo");
+});
+
+
+mongoose.connection.on("error", () => {
+  console.log("Connected to mongo");
+});
+mongoose.connection.on("connecting", () => {
   console.log("Connected to mongo");
 });
 
